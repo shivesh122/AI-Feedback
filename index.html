@@ -8,7 +8,15 @@
     body { font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; }
     textarea, input { width: 100%; margin-bottom: 10px; padding: 8px; }
     button { padding: 10px; width: 100%; cursor: pointer; }
-    #feedback { margin-top: 20px; padding: 10px; border: 1px solid #ccc; min-height: 50px; }
+   #feedback {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  font-size: 1.1em;
+  line-height: 1.4em;
+}
   </style>
 </head>
 <body>
@@ -23,25 +31,27 @@
 
   <div id="feedback"></div>
 
-  <script>
-    document.getElementById('getFeedback').addEventListener('click', async () => {
-      const metricsText = document.getElementById('metricsInput').value;
-      const apiKey = document.getElementById('apiKey').value;
-      const feedbackDiv = document.getElementById('feedback');
+<script>
+  document.getElementById('getFeedback').addEventListener('click', async () => {
+    const metricsText = document.getElementById('metricsInput').value;
+    const apiKey = document.getElementById('apiKey').value;
+    const feedbackDiv = document.getElementById('feedback');
 
-      try {
-        const metrics = JSON.parse(metricsText);
-        const res = await fetch('/api/generateFeedback', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ apiKey, metrics })
-        });
-        const data = await res.json();
-        feedbackDiv.textContent = data.feedback || 'No feedback received.';
-      } catch (err) {
-        feedbackDiv.textContent = 'Error: ' + err.message;
-      }
-    });
-  </script>
+    try {
+      const metrics = JSON.parse(metricsText);
+      const res = await fetch('/api/generateFeedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ apiKey, metrics })
+      });
+      const data = await res.json();
+      feedbackDiv.innerHTML = (data.feedback || 'No feedback received.')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\n/g, '<br>');
+    } catch (err) {
+      feedbackDiv.textContent = 'Error: ' + err.message;
+    }
+  });
+</script>
 </body>
 </html>
