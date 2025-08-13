@@ -17,13 +17,15 @@ export default async function handler(req, res) {
 
   try {
     const prompt = `
-Act as a supportive kids’ learning coach.
-Based on these metrics, give parents a short two-line summary:
-1st line — celebrate the child's achievement (use emojis).
-2nd line — give one gentle suggestion for improvement.
-Keep it friendly and under 250 characters.
-Metrics: ${JSON.stringify(metrics)}`;
+Act as a supportive kids’ learning coach and prepare a concise **progress report** for parents.
+The report should have:
+1. A quick summary of the child’s recent performance.
+2. Key metrics highlighted in **bold**.
+3. One suggestion for improvement.
+4. A positive closing statement.
 
+Metrics:
+${JSON.stringify(metrics)}`;
     const geminiResponse = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
