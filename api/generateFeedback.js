@@ -19,7 +19,7 @@ export default async function handler(req, res) {
     const prompt = `Act as a supportive kids’ learning coach. Provide short, positive feedback for parents based on these metrics: ${JSON.stringify(metrics)}`;
 
     const geminiResponse = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -35,6 +35,7 @@ export default async function handler(req, res) {
     }
 
     const result = await geminiResponse.json();
+    console.log("Gemini raw response:", JSON.stringify(result, null, 2));
     let feedbackText = "No feedback generated.";
     if (result?.candidates?.length) {
       feedbackText = result.candidates[0]?.content?.parts?.map(p => p.text).join(" ");
