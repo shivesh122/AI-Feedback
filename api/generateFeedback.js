@@ -16,7 +16,13 @@ export default async function handler(req, res) {
   }
 
   try {
-    const prompt = `Act as a supportive kids’ learning coach. Provide short, positive feedback for parents based on these metrics: ${JSON.stringify(metrics)}`;
+    const prompt = `
+Act as a supportive kids’ learning coach.
+Based on these metrics, give parents a short two-line summary:
+1st line — celebrate the child's achievement (use emojis).
+2nd line — give one gentle suggestion for improvement.
+Keep it friendly and under 250 characters.
+Metrics: ${JSON.stringify(metrics)}`;
 
     const geminiResponse = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
