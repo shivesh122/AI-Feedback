@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Feedback Demo</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; }
+    textarea, input { width: 100%; margin-bottom: 10px; padding: 8px; }
+    button { padding: 10px; width: 100%; cursor: pointer; }
+    #feedback { margin-top: 20px; padding: 10px; border: 1px solid #ccc; min-height: 50px; }
+  </style>
+</head>
+<body>
+  <h1>AI Feedback Demo</h1>
+  <label>Metrics JSON:</label>
+  <textarea id="metricsInput" rows="10" placeholder='Paste JSON here...'></textarea>
+
+  <label>API Key:</label>
+  <input type="password" id="apiKey" placeholder="Enter API Key" />
+
+  <button id="getFeedback">Get Feedback</button>
+
+  <div id="feedback"></div>
+
+  <script>
+    document.getElementById('getFeedback').addEventListener('click', async () => {
+      const metricsText = document.getElementById('metricsInput').value;
+      const apiKey = document.getElementById('apiKey').value;
+      const feedbackDiv = document.getElementById('feedback');
+
+      try {
+        const metrics = JSON.parse(metricsText);
+        const res = await fetch('/api/generateFeedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ apiKey, metrics })
+        });
+        const data = await res.json();
+        feedbackDiv.textContent = data.feedback || 'No feedback received.';
+      } catch (err) {
+        feedbackDiv.textContent = 'Error: ' + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
